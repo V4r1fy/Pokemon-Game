@@ -1,122 +1,27 @@
-# import telebot
-#
-# bot = telebot.TeleBot("5965990822:AAFuYx1D29gy2v7MHLSxMVgSYoei9WS5PSw", parse_mode=None)
-# # 1. - Редактор персонажа
+import logging
+from telegram import Update
+from telegram.ext import ApplicationBuilder, ContextTypes, CommandHandler
 
-from enum import Enum
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
 
-class WaistType(Enum):
-	THIN = 0,
-	MEDIUM = 1,
-	FAT = 2
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
 
-class HeightType(Enum):
-	HIGH = 0,
-	MEDIUM = 1,
-	LEPRIKONE = 2
+async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    name = update.effective_user.name
+    await context.bot.send_message(chat_id=update.effective_chat.id, text=f'Hello {name}, How are you?')
 
-class HairLength(Enum):
-	HIGH = 0,
-	MEDIUM = 1,
-	SKINHEAD = 2
+if __name__ == '__main__':
+    application = ApplicationBuilder().token('5965990822:AAFuYx1D29gy2v7MHLSxMVgSYoei9WS5PSw').build()
 
-class Skin(Enum):
-	WHITE = 0,
-	SUNBURNT = 1,
-	BLACK = 2
+    hello_handler = CommandHandler('hello', hello)
+    application.add_handler(hello_handler)
 
-class EyeSize(Enum):
-	TIGHT = 0,
-	MEDIUM = 1,
-	WIDE = 2
+    start_handler = CommandHandler('start', start)
+    application.add_handler(start_handler)
 
-class Persona:
-	hairColor = 'black'
-	hairLength = HairLength.MEDIUM
-	skin = Skin.WHITE
-	eyeColor = 'blue'
-	eyeSize = EyeSize.MEDIUM
-	Height = HeightType.MEDIUM
-	Waist = WaistType.FAT
+    application.run_polling()
 
-class PersonaBuilder():
-	def __init__(self):
-		self.personaFinal = Persona()
-
-	def set_eyes(self, eye: EyeSize):
-		self.personaFinal.eyeSuze = eye
-
-class  Pokemon:
-	lvl = 1
-	hp = 20
-	exp = 0
-	atk = 5
-	speed = 20
-	name = ''
-	up = 200
-
-	def lvlup(self):
-		self.lvl = self.lvl + 1
-		self.hp = self.hp + 20
-		self.speed = self.speed + 5
-		self.atk = self.atk + 10
-		self.up = self.up * 2
-		self.exp = 0
-
-	def attack1(self):
-		pass
-
-	def attack2(self):
-		pass
-
-	def attack3(self):
-		pass
-
-	def attack4(self):
-		pass
-
-
-class Pikachu(Pokemon):
-	speed = 50
-
-	def attack1(self):
-		self.atk = self.atk + 10
-		print('Пикачу ударяет разрядом молнии и наносит', self.atk, 'урона')
-
-class Chermonder(Pokemon):
-	atk = 10
-	hp = 25
-
-	def attack1(self):
-		self.atk = self.atk + 10
-		print('Чермондер запускает в противника шар огня который наносит', self.atk, 'урона')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# @bot.message_handler(commands=['start', 'help'])
-# def send_welcome(message):
-# 	bot.reply_to(message, "Howdy, how are you doing?")
-#
-# bot.infinity_polling()
